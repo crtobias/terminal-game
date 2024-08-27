@@ -116,8 +116,12 @@ end;
 
 
 
-procedure cargarMapa(M:typeMap);
+procedure cargarMapa(var M:typeMap; P:player;Mb:mob);
 begin
+	
+	M[P.pos]:= 'P';
+	M[Mb.pos]:= 'M';
+	Delay(1000);
 	clrscr;
 	gotoxy(20, 9);
     textbackground(black);
@@ -128,6 +132,8 @@ begin
 
 	gotoxy(20, 11);
 	writeln('|==============================|');
+	gotoxy(20, 12);
+	writeln('|HP: ',P.HP ,'=================|');
 end;
 
 procedure IniciarMob(var m:mob);
@@ -137,6 +143,41 @@ begin
 	m.pos:= 6;
 	m.dmg:= 7;
 	writeln('iniciando enemigo');
+end;
+
+procedure HealP(var P:player);
+begin
+	writeln('curando');
+	P.hp := P.hp + 2;
+end;
+
+procedure MovP(var P:player; var M:typeMap ; mob:mob);
+var
+	memo : integer ;
+begin
+	writeln('moviendo');
+	memo := p.pos;
+	M[memo] := '-';
+	P.pos := P.pos + 1;
+	cargarMapa(M,P,mob);
+end;
+
+procedure DmgP(var P:player; var M:typeMap; var mob:mob);
+begin
+	writeln('atacando');
+end;
+
+//1=MOVER 2=CURAR 3=ATACAR //
+procedure ElegirMov(var M:typeMap ; var P:player; mov:integer; var mob:mob);
+begin
+	if mov = 1 then
+		movP(P,M,mob)
+	else if mov = 2 then 
+		Healp(P)
+	else if mov = 3 then 
+		dmgP(P,M,mob)
+	else
+		writeln('elegi bien capo');
 end;
 
 
@@ -155,6 +196,13 @@ BEGIN
 		CrearPlayer(P);
 		IniciarMob(mob1);
 		iniciarMapa(Map,p,mob1);
-		cargarMapa(Map);
+		cargarMapa(Map,p,mob1);
+		while P.pos < tam do 
+			begin
+				elegirMov(Map,P , 1 ,mob1);
+			end;
 	end;
 END.
+
+
+
